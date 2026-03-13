@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import json
 import uuid
+import requests
+from ai_suggestions import generate_suggestions, GuestSuggestionResult
 
 app = Flask(__name__)
 app.secret_key = 'smartnudge_secret'
@@ -59,37 +61,31 @@ synthetic_guests = [
     # Continuing to 10...
 ] * 2  # Duplicate to make 10
 
-# Rule-based AI decision engine
-def generate_nudge(profile):
-    age = profile['age_group']
-    health = profile['health_conditions']
-    children = profile['children'] == 'yes'
-    caregiver = profile['caregiver'] == 'yes'
-    pref = profile['sust_pref']
-
-    nudges = {
-        'young': 'Use bike share instead of taxi for short trips.',
-        'adult': 'Turn off AC when out; set to 24C.',
-        'senior': 'Reuse bath towels - hang to dry.'
-    }.get(age, 'Conserve water with shorter showers.')
-
-    if children:
-        nudges += ' Teach kids to turn off taps.'
-    if caregiver:
-        nudges += ' Help others save energy too.'
-    if health == 'mobility':
-        nudges += ' Request room near elevators.'
-    elif health == 'allergy':
-        nudges += ' Choose unscented amenities.'
+# Enhanced AI suggestions from v0-app + genailab
+def enhanced_nudge(profile):
+    # Map simple form to v0 profile
+    v0_profile = {
+        'name': profile['name'],
+        'stay_duration': 3,  # default
+        'eco_conscious': profile['sust_pref'] == 'high',
+        'towel_reuse_willing': True,  # default
+        'has_medical_condition': profile['health_conditions'] != 'none',
+        'requires_frequent_linen_change': profile['health_conditions'] == 'mobility',
+        'has_children': profile['children'] == 'yes',
+        # Add more mappings...
+    }
     
-    if pref == 'high':
-        impact = 3.0
-    elif pref == 'medium':
-        impact = 2.0
-    else:
-        impact = 1.0
-
-    return nudges, impact
+    # Call v0 logic
+    result, nudge_text, impact = generate_suggestions(v0_profile)
+    
+    # TODO: Call genailab API
+    # api_key = 'sk-hMZ7kyoK4WN8E7jL-X8XgA'
+    # response = requests.post('https://genailab.tcs.in/model_predict', json={'model': 'sustainability', 'input': profile}, headers={'Authorization': f'Bearer {api_key}'})
+    # if response.ok:
+    #     ai_enhance = response.json()['nudge']
+    #     nudge_text += f" (AI enhanced: {ai_enhance})"
+    
+    return nudge_text, impact
 
 @app.route('/')
 def guest_form():
@@ -105,7 +101,7 @@ def nudge():
         'caregiver': request.form['caregiver'],
         'sust_pref': request.form['sust_pref']
     }
-    nudge_text, impact = generate_nudge(profile)
+    nudge_text, impact = enhanced_nudge(profile)
     guest_id = str(uuid.uuid4())[:8]
     synthetic_guests.append({
         'id': guest_id,
@@ -115,7 +111,7 @@ def nudge():
         'impact': impact,
         'opted_out': False
     })
-    return render_template('guest_nudge.html', profile=profile, nudge=nudge_text, impact=impact, guest_id=guest_id)
+    return render_template('guest_nudge.html', profile=profile, nudge=nudge_text, impact=impact, guest_id=guest_id, v0_url='http://localhost:3000/suggestions')
 
 @app.route('/optout/<guest_id>')
 def optout(guest_id):
@@ -146,5 +142,16 @@ def dashboard():
         'guest_types': guest_types
     })
 
+@app.route('/explore')
+def explore():
+    return '''
+    <html>
+    <head><title>Explore Full Features</title></head>
+    <body style="margin:0;">
+        <iframe src="http://localhost:3000/suggestions" width="100%" height="100vh" style="border:none;"></iframe>
+    </body>
+    </html>
+    '''
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
