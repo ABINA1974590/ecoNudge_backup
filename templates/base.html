@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>{% block title %}SmartNudge - Sustainable Hotel Stays{% endblock %}</title>\n    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">\n</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Guest Portal</a>
+            <a href="/dashboard">Manager Dashboard</a>
+        </nav>
+    </header>
+    <main>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flash">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 SmartNudge - Sustainable Stays</p>
+    </footer>
+</body>
+</html>

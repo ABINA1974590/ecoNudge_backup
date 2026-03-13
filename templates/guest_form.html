@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Guest Profile - SmartNudge{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Welcome to SmartNudge</h1>
+    <p>Help us personalize sustainability tips for your stay.</p>
+    <form method="POST" action="/nudge">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="age_group">Age Group:</label>
+                <select id="age_group" name="age_group" required>
+                    <option value="young">18-30 (Young)</option>
+                    <option value="adult">31-60 (Adult)</option>
+                    <option value="senior">60+ (Senior)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="sust_pref">Sustainability Preference:</label>
+                <select id="sust_pref" name="sust_pref" required>
+                    <option value="low">Low effort</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High effort</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Health Conditions:</label>
+            <label><input type="radio" name="health_conditions" value="none" checked> None</label>
+            <label><input type="radio" name="health_conditions" value="mobility"> Mobility issues</label>
+            <label><input type="radio" name="health_conditions" value="allergy"> Allergies</label>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Travelling with children?</label>
+                <label><input type="radio" name="children" value="yes"> Yes</label>
+                <label><input type="radio" name="children" value="no" checked> No</label>
+            </div>
+            <div class="form-group">
+                <label>Caregiver status?</label>
+                <label><input type="radio" name="caregiver" value="yes"> Yes</label>
+                <label><input type="radio" name="caregiver" value="no" checked> No</label>
+            </div>
+        </div>
+        <button type="submit" class="btn">Get My Nudge</button>
+    </form>
+</div>
+{% endblock %}

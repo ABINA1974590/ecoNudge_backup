@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Manager Dashboard - SmartNudge{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Manager Dashboard</h1>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Guests</h3>
+            <p>{{ stats.total_guests }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Nudges Delivered</h3>
+            <p>{{ stats.nudged }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Impact</h3>
+            <p>{{ stats.total_impact }} kg CO2</p>
+        </div>
+    </div>
+    <h2>Guest Types</h2>
+    <ul>
+        {% for type_, count in stats.guest_types.items() %}
+        <li>{{ type_ }}: {{ count }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Recent Guests</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Children</th>
+                <th>Nudge</th>
+                <th>Impact</th>
+                <th>Opted Out</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for guest in guests[-10:] %}
+            <tr>
+                <td>{{ guest.name }}</td>
+                <td>{{ guest.age_group }}</td>
+                <td>{{ guest.children }}</td>
+                <td>{{ guest.nudge[:50] }}...</td>
+                <td>{{ "%.1f"|format(guest.impact) }}</td>
+                <td>{{ 'Yes' if guest.opted_out else 'No' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/" class="btn">Guest Portal</a>
+</div>
+{% endblock %}

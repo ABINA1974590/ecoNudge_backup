@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Your Nudge - SmartNudge{% endblock %}
+
+{% block content %}
+<div class="nudge-container">
+    <h1>Hi {{ profile.name }}!</h1>
+    <div class="nudge-card">
+        <h2>Your Personalized Sustainability Nudge</h2>
+        <p class="nudge-text">{{ nudge }}</p>
+        <p class="impact">Estimated impact: {{ "%.1f"|format(impact) }} kg CO2 saved! 🌿</p>
+    </div>
+    <div class="actions">
+        <a href="/optout/{{ guest_id }}" class="btn btn-secondary">Opt-out</a>
+        <a href="/" class="btn">New Profile</a>
+    </div>
+</div>
+{% endblock %}
