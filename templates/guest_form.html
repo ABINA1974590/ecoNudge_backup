@@ -1,53 +1,58 @@
 {% extends "base.html" %}
 
-{% block title %}Guest Profile - SmartNudge{% endblock %}
+{% block title %}Guest Profile - EcoNudge{% endblock %}
 
 {% block content %}
 <div class="form-container">
     <h1>Welcome to SmartNudge</h1>
-    <p>Help us personalize sustainability tips for your stay.</p>
+    <p>AI-powered sustainability tips for your stay. Fill form → get v0-AI nudge!</p>
     <form method="POST" action="/nudge">
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" required placeholder="John Doe">
         </div>
         <div class="form-row">
             <div class="form-group">
                 <label for="age_group">Age Group:</label>
                 <select id="age_group" name="age_group" required>
+                    <option value="">Select...</option>
                     <option value="young">18-30 (Young)</option>
-                    <option value="adult">31-60 (Adult)</option>
+                    <option value="adult" selected>31-60 (Adult)</option>
                     <option value="senior">60+ (Senior)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="sust_pref">Sustainability Preference:</label>
+                <label for="sust_pref">Sustainability:</label>
                 <select id="sust_pref" name="sust_pref" required>
+                    <option value="">Select...</option>
                     <option value="low">Low effort</option>
-                    <option value="medium">Medium</option>
+                    <option value="medium" selected>Medium</option>
                     <option value="high">High effort</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
-            <label>Health Conditions:</label>
+            <label>Health:</label>
             <label><input type="radio" name="health_conditions" value="none" checked> None</label>
-            <label><input type="radio" name="health_conditions" value="mobility"> Mobility issues</label>
-            <label><input type="radio" name="health_conditions" value="allergy"> Allergies</label>
+            <label><input type="radio" name="health_conditions" value="mobility"> Mobility</label>
+            <label><input type="radio" name="health_conditions" value="allergy"> Allergy</label>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label>Travelling with children?</label>
-                <label><input type="radio" name="children" value="yes"> Yes</label>
+                <label>Children?</label>
                 <label><input type="radio" name="children" value="no" checked> No</label>
+                <label><input type="radio" name="children" value="yes"> Yes</label>
             </div>
             <div class="form-group">
-                <label>Caregiver status?</label>
-                <label><input type="radio" name="caregiver" value="yes"> Yes</label>
+                <label>Caregiver?</label>
                 <label><input type="radio" name="caregiver" value="no" checked> No</label>
+                <label><input type="radio" name="caregiver" value="yes"> Yes</label>
             </div>
         </div>
-        <button type="submit" class="btn">Get My Nudge</button>
+        <button type="submit" class="btn">🤖 Get AI Nudge</button>
     </form>
+    <div style="text-align:center;margin-top:2rem;color:#666;">
+        <p>Powered by v0-AI sustainability engine + GenAI lab</p>
+    </div>
 </div>
 {% endblock %}
